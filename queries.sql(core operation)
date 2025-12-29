@@ -1,0 +1,26 @@
+SELECT title, author, rental_price FROM Books WHERE status = 'yes';
+
+-- CREATE: Add new book
+INSERT INTO Books VALUES('978-0-7432-7356-5', 'Pride and Prejudice', 'Jane Austen', 'Classic', 4.50, 'yes');
+
+-- UPDATE: Mark book as issued
+UPDATE Books SET status = 'no' WHERE isbn = '978-1-60129-456-2';
+
+-- DELETE: Remove inactive member
+DELETE FROM Members WHERE member_id = 'M003';
+
+-- JOIN: Books issued to members
+SELECT b.title, m.name, i.issue_date 
+FROM Issued i 
+JOIN Books b ON i.isbn = b.isbn 
+JOIN Members m ON i.member_id = m.member_id;
+
+-- Analysis: Books per category
+SELECT category, COUNT(*) as total_books FROM Books GROUP BY category;
+
+-- Overdue books (>14 days)
+SELECT m.name, b.title, DATEDIFF(CURDATE(), i.issue_date) as days_overdue
+FROM Issued i 
+JOIN Books b ON i.isbn = b.isbn 
+JOIN Members m ON i.member_id = m.member_id 
+WHERE DATEDIFF(CURDATE(), i.issue_date) > 14;
